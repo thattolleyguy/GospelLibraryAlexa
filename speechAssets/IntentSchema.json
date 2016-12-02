@@ -1,0 +1,29 @@
+{
+    "intents": [
+        {
+            "intent": "AMAZON.ResumeIntent"
+        },
+        {
+            "intent": "AMAZON.PauseIntent"
+        },
+        {
+            "intent": "PlayTalk"
+        },
+      {
+        "intent":"ReadScripture",
+        "slots":[
+          {
+            "name":"Book",
+            "type":"SCRIPTURE_BOOK"
+          },
+          {
+            "name":"Chapter",
+            "type":"AMAZON.NUMBER"
+          }
+        ]
+      },
+        {
+            "intent": "ContinueTalk"
+        }
+    ]
+}

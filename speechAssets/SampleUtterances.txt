@@ -1,0 +1,8 @@
+PlayTalk play talk
+PlayTalk to play talk
+ReadScripture read {Book} chapter {Chapter}
+ReadScripture read {Book} section {Chapter}
+ReadScripture read {Book}
+ReadScripture read the {Book}
+ContinueTalk continue
+ContinueTalk continue talk
