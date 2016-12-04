@@ -27,5 +27,3 @@ Create a [lambda](https://aws.amazon.com/lambda/) (with a role that has permissi
 Create an [Alexa Skill](https://developer.amazon.com/alexa-skills-kit) pointed at your lambda. Make sure to check yes to "Audio Player". Using the files in the speech assets folder, add the sample utterances, intent schema and the custom slot values for SCRIPTURE_BOOK slot type.
 
 That should get you up and running. These instructions may be incomplete so feel free to reach out and ask for help if you need it.
-oad by itself?
-
