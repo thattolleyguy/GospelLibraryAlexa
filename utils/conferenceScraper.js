@@ -1,30 +1,8 @@
-var http = require('http');
-var https = require('https');
 var request = require('request');
 let cheerio = require('cheerio');
 var regex = /\([0-9]+\)/;
 var fs = require('fs');
 
-
-// var options = {
-//     host: 'www.lds.org',
-//     port: 80
-// };
-
-// console.log('running test');
-
-// var req = http.get(options, function(resp){
-//     console.log("Got response: "+resp.statusCode);
-//     resp.on('data', function(chunk){
-//         console.log('BODY: '+chunk);
-//     })
-// });
-
-// req.on('error', function(e){
-//     console.log("Got error: "+e.message);
-// })
-
-// req.end();
 function scrapeTalks(path, filename){
     var url = 'https://www.lds.org'+path;
     request(url, function(error,response,body){
