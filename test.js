@@ -92,3 +92,16 @@ when("ReadScripture", {Book: {name: "Book", value: "Helaman"}})
   }
 })
 .catch(report)
+
+// Unhandled Intent
+when("NoSuchIntent")
+.then(function(reply){
+  if (reply.response.outputSpeech.text === "Sorry, I can't do that.") {
+    return Promise.resolve(reply)
+  } else {
+    var message = reply.response.outputSpeech.text+
+    "\n"+JSON.stringify(reply, undefined, 2)
+    return Promise.reject(message)
+  }
+})
+.catch(report)

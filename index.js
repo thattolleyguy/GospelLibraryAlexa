@@ -114,7 +114,7 @@ function onIntent(intentRequest, session, callback) {
       handlers[intentName](intent, session, callback)
     } else {
       // Unhandled Intent
-      unhandled(intent, session, callback)
+      unhandledIntent(intent, session, callback)
     }
 }
 
@@ -248,7 +248,7 @@ function unhandledIntent(intent, session, callback) {
   var speechOutput = "Sorry, I can't do that."
   var repromptText = "What would you like to do?"
   var shouldEndSession = false
-  callback(sesion.sessionAttributes,
+  callback(session.sessionAttributes,
     buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession))
 }
 
