@@ -118,21 +118,43 @@ function onIntent(intentRequest, session, callback) {
     }
 }
 
+var monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
 function playTalk(intent, session, callback) {
     var cardTitle = intent.name;
     var repromptText = "";
     var sessionAttributes = {};
     var shouldEndSession = true;
-    var speechOutput = "";
-    var url = "https://s3.amazonaws.com/gospellibrarycontent/2016-04-1010-henry-b-eyring-64k-eng+(2).mp3";
+    var requestedDate = new Date();
+    if(intent.slots.conferenceDate !== undefined && intent.slots.conferenceDate.value !== undefined){
+        console.log(`Requested date is ${intent.slots.conferenceDate.value}`);
+        requestedDate = new Date(intent.slots.conferenceDate.value);
+    }
+    var conferenceDate = getMostRecentGeneralConferenceDate(requestedDate);
+    var speechOutput = `Playing talk by ${intent.slots.speaker.value} from ${monthNames[conferenceDate.getMonth()]} ${conferenceDate.getFullYear()}`;
 
-
-    speechOutput = "Playing talk right now.";
-    repromptText = "Playing talk";
-
+    //TODO: Query out for what talks are available in selected conference from speaker. If more than one, then pick one or list the titles and ask the user to pick one.
+    // If only one, then just play
 
     callback(sessionAttributes,
-        buildPlaybackResponse(cardTitle, speechOutput, repromptText, url, "AudioPlayer.Play", shouldEndSession));
+        buildSpeechletResponse("Play talk", speechOutput, repromptText, true));
+}
+
+function getMostRecentGeneralConferenceDate(date){
+    console.log(`Finding conference for ${date}`)
+    if(date === undefined)
+        date = new Date();
+    var month = date.getUTCMonth();
+    var year = date.getUTCFullYear();
+    if(month<3)
+        year = year - 1;
+    month = (month+9)%12;
+    if(month<6)
+        month=3;
+    else month = 9;
+    return new Date(year, month);
 }
 
 function readScripture(intent, session, callback) {
@@ -196,7 +218,7 @@ function readScripture(intent, session, callback) {
 
             var url = "https://s3.amazonaws.com/alexagospellibraryskill/scriptures/" + bookInfo.prefix + fileNumber + "-" + bookInfo.fileName + chapterString + "-64k-eng.mp3";
             console.log(url);
-            sessionAttributes['currentlyPlaying']=url;
+            sessionAttributes.currentlyPlaying=url;
 
             callback(sessionAttributes,
                 buildPlaybackSSMLResponse(cardTitle, speechOutput, "", url, "AudioPlayer.Play", true));
