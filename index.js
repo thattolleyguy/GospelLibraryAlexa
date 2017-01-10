@@ -14,7 +14,7 @@
  * Clean up code
  * Support amazon built in intents
  * Play previous/next chapter
- * 
+ *
  */
 
 var AWS = require("aws-sdk");
@@ -100,20 +100,21 @@ function onIntent(intentRequest, session, callback) {
         intentName = intentRequest.intent.name;
 
     // Dispatch to your skill's intent handlers
-    if ("PlayTalk" === intentName) {
-        playTalk(intent, session, callback);
-    } else if ("ReadScripture" === intentName) {
-        readScripture(intent, session, callback);
-    } else if ("AMAZON.PauseIntent" === intentName) {
-        pausePlayback(intent, session, callback);
-    } else if ("AMAZON.ResumeIntent" === intentName) {
-        resumePlayback(intent, session, callback);
-    } else if ("AMAZON.HelpIntent" === intentName) {
-        getWelcomeResponse(callback);
-    } else if ("AMAZON.StopIntent" === intentName || "AMAZON.CancelIntent" === intentName) {
-        handleSessionEndRequest(callback);
+    var handlers = {
+      "PlayTalk": playTalk
+      ,"ReadScripture": readScripture
+      ,"AMAZON.PauseIntent": pausePlayback
+      ,"AMAZON.ResumeIntent": resumePlayback
+      ,"AMAZON.HelpIntent": (i, s, callback) => getWelcomeResponse(callback)
+      ,"AMAZON.StopIntent": (i, s, callback) => handleSessionEndRequest(callback)
+      ,"AMAZON.CancelIntent": (i, s, callback) => handleSessionEndRequest(callback)
+    }
+    console.log("Request for "+intentName)
+    if (handlers[intentName] !== undefined) {
+      handlers[intentName](intent, session, callback)
     } else {
-        throw "Invalid intent";
+      // Unhandled Intent
+      unhandledIntent(intent, session, callback)
     }
 }
 
@@ -240,6 +241,15 @@ function resumePlayback(intent, session, callback) {
 
     callback(sessionAttributes,
         buildPlaybackResponse(cardTitle, speechOutput, repromptText, url, "AudioPlayer.Play", shouldEndSession));
+}
+
+function unhandledIntent(intent, session, callback) {
+  var cardTitle = "Unhandled: "+intent.name
+  var speechOutput = "Sorry, I can't do that."
+  var repromptText = "What would you like to do?"
+  var shouldEndSession = false
+  callback(session.sessionAttributes,
+    buildSpeechletResponse(cardTitle, speechOutput, repromptText, shouldEndSession))
 }
 
 /**
